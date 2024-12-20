@@ -9,7 +9,7 @@ import (
 )
 
 type StorageCfg struct {
-	uname, password, host, port, dbName string
+	Uname, Password, Host, Port, DbName string
 }
 
 type Conn interface {
@@ -21,7 +21,7 @@ type Conn interface {
 }
 
 func NewConn(ctx context.Context, sc StorageCfg) (*pgx.Conn, error) {
-	dbs := fmt.Sprintf("postgresql://%s:%s@%s:%s/%s?sslmode=disable", sc.uname, sc.password, sc.host, sc.port, sc.dbName)
+	dbs := fmt.Sprintf("postgresql://%s:%s@%s:%s/%s?sslmode=disable", sc.Uname, sc.Password, sc.Host, sc.Port, sc.DbName)
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
 
