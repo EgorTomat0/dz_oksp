@@ -28,12 +28,9 @@ func main() {
 	bookRepo := book.NewRepo(pgConn)
 	aBookRepo := audioBook.NewRepo(pgConn)
 
-	// TODO: remove this hard code
-	log.Println(userRepo, bookRepo, aBookRepo)
-
-	userHandler := user.NewUserHandler()
-	bookHandler := book.NewBookHandler()
-	ABHandler := audioBook.NewABHandler()
+	userHandler := user.NewUserHandler(userRepo)
+	bookHandler := book.NewBookHandler(bookRepo)
+	ABHandler := audioBook.NewABHandler(aBookRepo)
 
 	bookHandler.Register(router)
 	ABHandler.Register(router)
