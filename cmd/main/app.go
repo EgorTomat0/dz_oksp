@@ -1,15 +1,35 @@
 package main
 
 import (
+	"context"
 	"dz_oksp/internal/audioBook"
 	"dz_oksp/internal/book"
 	"dz_oksp/internal/user"
+	"dz_oksp/pkg/pgsql"
+	"log"
 	"net/http"
 	"time"
 )
 
 func main() {
 	router := http.NewServeMux()
+	sc := pgsql.StorageCfg{
+		Uname:    "postgres",
+		Password: "anibliss",
+		Host:     "localhost",
+		Port:     "5432",
+		DbName:   "postgres",
+	}
+	pgConn, err := pgsql.NewConn(context.TODO(), sc)
+	if err != nil {
+		log.Fatal(err)
+	}
+	userRepo := user.NewRepo(pgConn)
+	bookRepo := book.NewRepo(pgConn)
+	aBookRepo := audioBook.NewRepo(pgConn)
+
+	// TODO: remove this hard code
+	log.Println(userRepo, bookRepo, aBookRepo)
 
 	userHandler := user.NewUserHandler()
 	bookHandler := book.NewBookHandler()
@@ -25,7 +45,7 @@ func main() {
 		ReadTimeout:  15 * time.Second,
 	}
 
-	err := server.ListenAndServe()
+	err = server.ListenAndServe()
 	if err != nil {
 		server.Close()
 	}
